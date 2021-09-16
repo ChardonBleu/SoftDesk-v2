@@ -8,6 +8,29 @@ from issuetracking.permissions import IsAuthorProject, IsContributorProject
 
 
 class ProjectViewSet(viewsets.ModelViewSet):
+    """
+    The endpoint [project list](/projects/) is the main entry point of the **SoftDesk API**.
+
+    The SoftDesk API is a RESTful API built using Django Rest Framework. It's
+    part of project 10 of Openclassrooms formation Pyhton Developpers.
+
+    This API can be used to manage team projects.
+    You need to be authenticated to see projects list.
+    
+    You can signup on [signup endpoint](/signup/).
+    Every user can create a new project and then add contributors for this
+    project.
+    
+    You only can see project details if you're author or contributor for this
+    project.
+    Only projects/issues/comments authors can update or delete projects/issues
+    /comments.
+    
+    On PostMan you'll have to use a [token](/token/) for authentication.
+    After the first use of token access you'll have to 
+    [refresh](/token/refresh/) it.
+    
+    """
 
     queryset = Project.objects.all()
     serializer_class = ProjectSerializer

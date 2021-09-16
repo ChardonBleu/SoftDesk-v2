@@ -21,5 +21,4 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('issuetracking.urls')),
     path('', include('account.urls')),
-    path('', include('rest_framework.urls')), 
 ]

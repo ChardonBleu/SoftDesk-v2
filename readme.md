@@ -63,7 +63,7 @@ Django version 3.2.5, using settings 'LITReview.settings'
 Starting development server at http://127.0.0.1:8000/
 Quit the server with CTRL-BREAK.
 
-Aller sur l'adresse http proposée pour consulter le site.
+Aller sur l'adresse http proposée pour consulter l'API dans .
 
 
 Générer un rapport flake-8 html
