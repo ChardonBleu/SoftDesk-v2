@@ -5,7 +5,7 @@ from issuetracking.models import Contributor
 
 class IsAuthorProject(BasePermission):
     message = "Seul l'auteur d'un projet/commentaire \
-    peut mettre à jour ou supprimer ce projet/commentaire."
+peut mettre à jour ou supprimer ce projet/commentaire."
     
     def has_object_permission(self, request, view, obj):
         if request.method in SAFE_METHODS :
@@ -15,17 +15,18 @@ class IsAuthorProject(BasePermission):
 
 class IsContributorProject(BasePermission):
     message = "Seuls les contributeurs d'un projets peuvent accéder aux \
-    problèmes et commentaires de ce projet et en créer de nouveaux."
+problèmes et commentaires de ce projet et en créer de nouveaux."
     
     def has_permission(self, request, view):
-        """allow 
+        """allow to view list project, issue or comment, and to add project,
+        issue or comment
 
         Arguments:
-            request {[type]} -- [description]
-            view {[type]} -- [description]
+            request {[type]} -- contain post data
+            view {[type]} -- current view
 
         Returns:
-            [type] -- [description]
+            [bool] -- true if permission is ok
         """
         project_id = view.kwargs['project_id']
         is_author = Contributor.objects.filter(
@@ -44,7 +45,59 @@ class IsContributorProject(BasePermission):
 
         
     def has_object_permission(self, request, view, obj):
+        """allow to retrieve, update or delete project, issue or comment
+
+        Arguments:
+            request {[type]} -- contain post data
+            view {[type]} -- current view
+            obj -- current model object
+
+        Returns:
+            [bool] -- true if permission is ok
+        """
         if request.method in SAFE_METHODS :
             return True
         if request.method == 'DELETE' or request.method == 'PUT':
             return obj.author_user_id == request.user
+
+class canManageContributors(BasePermission):
+    message = "Seuls les contributeurs d'un projets peuvent ajouter de \
+nouveaux contributeurs."
+
+    def has_permission(self, request, view):
+        """allow to view list contributirs and post new contributor.
+
+        Arguments:
+            request {[type]} -- contain post data
+            view {[type]} -- current view
+
+        Returns:
+            [bool] -- true if permission is ok
+        """
+        project_id = view.kwargs['project_id']
+        is_author = Contributor.objects.filter(
+            project_id=project_id, 
+            user_id=request.user, 
+            permission="AUTHOR").exists()
+        is_contrib = Contributor.objects.filter(
+            project_id=project_id, 
+            user_id=request.user, 
+            permission="CONTRIB").exists()
+                    
+        if request.method in SAFE_METHODS or request.method == 'POST':
+            return is_author or is_contrib
+        if request.method == 'PUT' or request.method == 'DELETE':
+            return is_author or is_contrib
+
+        
+    def has_object_permission(self, request, view, obj):
+        
+        project_id = view.kwargs['project_id']
+        can_manage_contributors = Contributor.objects.filter(
+            project_id=project_id, 
+            user_id=request.user).exists()
+        
+        if request.method in SAFE_METHODS :
+            return True
+        if request.method == 'DELETE' or request.method == 'PUT':
+            return can_manage_contributors

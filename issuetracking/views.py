@@ -4,7 +4,7 @@ from rest_framework.permissions import IsAuthenticated
 from issuetracking.models import Project, Issue, Contributor, Comment
 from issuetracking.serializers import ProjectSerializer, IssueSerializer
 from issuetracking.serializers import ContributorsSerializer, CommentSerializer
-from issuetracking.permissions import IsAuthorProject, IsContributorProject
+from issuetracking.permissions import IsAuthorProject, IsContributorProject, canManageContributors
 
 
 class ProjectViewSet(viewsets.ModelViewSet):
@@ -48,7 +48,7 @@ class ProjectViewSet(viewsets.ModelViewSet):
 class ContributorsViewSet(viewsets.ModelViewSet):
 
     serializer_class = ContributorsSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, canManageContributors]
 
     def get_queryset(self):
         """This view should return a list of all the contributors
@@ -56,6 +56,17 @@ class ContributorsViewSet(viewsets.ModelViewSet):
         """
         project_id = self.kwargs['project_id']
         return Contributor.objects.filter(project_id=project_id)
+
+    def perform_create(self, serializer):
+        """When somenone add a contributors he does it for a done project,
+        and the project-id is passed in url.
+
+        Arguments:
+            serializer  -- CommentSerializer
+        """
+        project_id = self.kwargs['project_id']
+        project = Project.objects.get(id=project_id)
+        serializer.save(project_id=project)
 
 
 class IssueViewSet(viewsets.ModelViewSet):
