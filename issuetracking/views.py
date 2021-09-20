@@ -4,38 +4,40 @@ from rest_framework.permissions import IsAuthenticated
 from issuetracking.models import Project, Issue, Contributor, Comment
 from issuetracking.serializers import ProjectSerializer, IssueSerializer
 from issuetracking.serializers import ContributorsSerializer, CommentSerializer
-from issuetracking.permissions import IsAuthorProject, IsContributorProject, canManageContributors
+from issuetracking.permissions import IsAuthorProject, IsContributorProject
+from issuetracking.permissions import CanManageContributors
 
 
 class ProjectViewSet(viewsets.ModelViewSet):
     """
-    The endpoint [project list](/projects/) is the main entry point of the **SoftDesk API**.
+    The endpoint [project list](/projects/) is the main entry point of the
+    **SoftDesk API**.
 
     The SoftDesk API is a RESTful API built using Django Rest Framework. It's
     part of project 10 of Openclassrooms formation Pyhton Developpers.
 
     This API can be used to manage team projects.
     You need to be authenticated to see projects list.
-    
+
     You can signup on [signup endpoint](/signup/).
     Every user can create a new project and then add contributors for this
     project.
-    
+
     You only can see project details if you're author or contributor for this
     project.
     Only projects/issues/comments authors can update or delete projects/issues
     /comments.
-    
+
     On PostMan you'll have to use a [token](/token/) for authentication.
-    After the first use of token access you'll have to 
+    After the first use of token access you'll have to
     [refresh](/token/refresh/) it.
-    
+
     """
 
     queryset = Project.objects.all()
     serializer_class = ProjectSerializer
     permission_classes = [IsAuthenticated, IsAuthorProject]
-    
+
     def perform_create(self, serializer):
         """The author is automaticaly saved as the authenticated user
 
@@ -43,7 +45,6 @@ class ProjectViewSet(viewsets.ModelViewSet):
             serializer  -- ProjectSerializer
         """
         serializer.save(author_user=self.request.user)
-
 
     def get_queryset(self):
         """This view should return only projects if authenticated user is the
@@ -53,14 +54,14 @@ class ProjectViewSet(viewsets.ModelViewSet):
         is_author_or_contrib = Contributor.objects.filter(
             user=self.request.user).values()
         for user in is_author_or_contrib:
-            projects_of_user.append(user['project_id'])        
+            projects_of_user.append(user['project_id'])
         return Project.objects.filter(id__in=projects_of_user)
 
 
 class ContributorsViewSet(viewsets.ModelViewSet):
 
     serializer_class = ContributorsSerializer
-    permission_classes = [IsAuthenticated, canManageContributors]
+    permission_classes = [IsAuthenticated, CanManageContributors]
 
     def get_queryset(self):
         """This view should return a list of all the contributors
@@ -84,9 +85,8 @@ class ContributorsViewSet(viewsets.ModelViewSet):
 class IssueViewSet(viewsets.ModelViewSet):
 
     serializer_class = IssueSerializer
-    permission_classes = [IsAuthenticated, IsContributorProject]   
-    
-    
+    permission_classes = [IsAuthenticated, IsContributorProject]
+
     def perform_create(self, serializer):
         """The author is automaticaly saved as the authenticated user.
         The project_id is authomaticaly saved using the project_id in the url
@@ -98,7 +98,7 @@ class IssueViewSet(viewsets.ModelViewSet):
         project = self.kwargs['project_id']
         project = Project.objects.get(id=project)
         serializer.save(author_user=self.request.user, project=project)
-        
+
     def get_queryset(self):
         """
         This view should return a list of all the issues
@@ -116,7 +116,7 @@ class CommentViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         """The author is automaticaly saved as the authenticated user.
         The issue_id is authomaticaly saved using the issue_id in the url
-        endpoint. 
+        endpoint.
 
         Arguments:
             serializer  -- CommentSerializer
