@@ -10,7 +10,7 @@ peut mettre à jour ou supprimer ce projet/commentaire."
     def has_object_permission(self, request, view, obj):
         if request.method in SAFE_METHODS :
             return True        
-        return obj.author_user_id == request.user
+        return obj.author_user == request.user
 
 
 class IsContributorProject(BasePermission):
@@ -28,14 +28,14 @@ problèmes et commentaires de ce projet et en créer de nouveaux."
         Returns:
             [bool] -- true if permission is ok
         """
-        project_id = view.kwargs['project_id']
+        project = view.kwargs['project_id']
         is_author = Contributor.objects.filter(
-            project_id=project_id, 
-            user_id=request.user, 
+            project=project, 
+            user=request.user, 
             permission="AUTHOR").exists()
         is_contrib = Contributor.objects.filter(
-            project_id=project_id, 
-            user_id=request.user, 
+            project=project, 
+            user=request.user, 
             permission="CONTRIB").exists()
                     
         if request.method in SAFE_METHODS or request.method == 'POST':
@@ -58,7 +58,7 @@ problèmes et commentaires de ce projet et en créer de nouveaux."
         if request.method in SAFE_METHODS :
             return True
         if request.method == 'DELETE' or request.method == 'PUT':
-            return obj.author_user_id == request.user
+            return obj.author_user == request.user
 
 class canManageContributors(BasePermission):
     message = "Seuls les contributeurs d'un projets peuvent ajouter de \
@@ -74,14 +74,14 @@ nouveaux contributeurs."
         Returns:
             [bool] -- true if permission is ok
         """
-        project_id = view.kwargs['project_id']
+        project = view.kwargs['project_id']
         is_author = Contributor.objects.filter(
-            project_id=project_id, 
-            user_id=request.user, 
+            project=project, 
+            user=request.user, 
             permission="AUTHOR").exists()
         is_contrib = Contributor.objects.filter(
-            project_id=project_id, 
-            user_id=request.user, 
+            project=project, 
+            user=request.user, 
             permission="CONTRIB").exists()
                     
         if request.method in SAFE_METHODS or request.method == 'POST':
@@ -92,10 +92,10 @@ nouveaux contributeurs."
         
     def has_object_permission(self, request, view, obj):
         
-        project_id = view.kwargs['project_id']
+        project = view.kwargs['project_id']
         can_manage_contributors = Contributor.objects.filter(
-            project_id=project_id, 
-            user_id=request.user).exists()
+            project=project, 
+            user=request.user).exists()
         
         if request.method in SAFE_METHODS :
             return True

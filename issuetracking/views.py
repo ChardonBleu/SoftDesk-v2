@@ -42,7 +42,19 @@ class ProjectViewSet(viewsets.ModelViewSet):
         Arguments:
             serializer  -- ProjectSerializer
         """
-        serializer.save(author_user_id=self.request.user)
+        serializer.save(author_user=self.request.user)
+
+
+    def get_queryset(self):
+        """This view should return only projects if authenticated user is the
+        author or one of the contributors.
+        """
+        projects_of_user = []
+        is_author_or_contrib = Contributor.objects.filter(
+            user=self.request.user).values()
+        for user in is_author_or_contrib:
+            projects_of_user.append(user['project_id'])        
+        return Project.objects.filter(id__in=projects_of_user)
 
 
 class ContributorsViewSet(viewsets.ModelViewSet):
@@ -54,8 +66,8 @@ class ContributorsViewSet(viewsets.ModelViewSet):
         """This view should return a list of all the contributors
         as determined by the project_id portion of the URL.
         """
-        project_id = self.kwargs['project_id']
-        return Contributor.objects.filter(project_id=project_id)
+        project = self.kwargs['project_id']
+        return Contributor.objects.filter(project=project)
 
     def perform_create(self, serializer):
         """When somenone add a contributors he does it for a done project,
@@ -64,9 +76,9 @@ class ContributorsViewSet(viewsets.ModelViewSet):
         Arguments:
             serializer  -- CommentSerializer
         """
-        project_id = self.kwargs['project_id']
-        project = Project.objects.get(id=project_id)
-        serializer.save(project_id=project)
+        project = self.kwargs['project_id']
+        project = Project.objects.get(id=project)
+        serializer.save(project=project)
 
 
 class IssueViewSet(viewsets.ModelViewSet):
@@ -83,17 +95,17 @@ class IssueViewSet(viewsets.ModelViewSet):
         Arguments:
             serializer  -- CommentSerializer
         """
-        project_id = self.kwargs['project_id']
-        project = Project.objects.get(id=project_id)
-        serializer.save(author_user_id=self.request.user, project_id=project)
+        project = self.kwargs['project_id']
+        project = Project.objects.get(id=project)
+        serializer.save(author_user=self.request.user, project=project)
         
     def get_queryset(self):
         """
         This view should return a list of all the issues
         as determined by the project_id portion of the URL.
         """
-        project_id = self.kwargs['project_id']
-        return Issue.objects.filter(project_id=project_id)
+        project = self.kwargs['project_id']
+        return Issue.objects.filter(project=project)
 
 
 class CommentViewSet(viewsets.ModelViewSet):
@@ -109,14 +121,14 @@ class CommentViewSet(viewsets.ModelViewSet):
         Arguments:
             serializer  -- CommentSerializer
         """
-        issue_id = self.kwargs['issue_id']
-        issue = Issue.objects.get(id=issue_id)
-        serializer.save(author_user_id=self.request.user, issue_id=issue)
+        issue = self.kwargs['issue_id']
+        issue = Issue.objects.get(id=issue)
+        serializer.save(author_user=self.request.user, issue=issue)
 
     def get_queryset(self):
         """
         This view should return a list of all the comments
         as determined by the issue_id portion of the URL.
         """
-        issue_id = self.kwargs['issue_id']
-        return Comment.objects.filter(issue_id=issue_id)
+        issue = self.kwargs['issue_id']
+        return Comment.objects.filter(issue=issue)
