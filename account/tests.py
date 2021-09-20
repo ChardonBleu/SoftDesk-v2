@@ -13,7 +13,7 @@ def api_client(db):
 # ####################### TEST registration ####################### #
 
 
-def test_registration(db, api_client: APIClient) -> None:
+def test_registration(db, api_client: APIClient):
     user_count = User.objects.count()
     response = api_client.post('/signup/',
                                {'username': 'azalae',

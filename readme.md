@@ -129,7 +129,7 @@ La documentation officielle de DjangoRestFramework:
 Remerciements
 ---
 
-Un très grand merci à ma mentor Sandrine Suire pour sa trés grande disponibilité son accompagnement de qualité et sa pateince à tout (ré)expliquer dans les moments de perdition.
+Un très grand merci à ma mentor Sandrine Suire pour sa trés grande disponibilité, son accompagnement de qualité et sa patience à tout (ré)expliquer dans les moments de perdition.
 
 Et merci à tous les membres du Discord DA python: 
 http://discord.pythonclassmates.org/
