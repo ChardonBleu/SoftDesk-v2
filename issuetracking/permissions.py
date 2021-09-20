@@ -14,7 +14,7 @@ peut mettre à jour ou supprimer ce projet/commentaire."
 
 
 class IsContributorProject(BasePermission):
-    message = "Seuls les contributeurs d'un projets peuvent accéder aux \
+    message = "Seuls les contributeurs d'un projet peuvent accéder aux \
 problèmes et commentaires de ce projet et en créer de nouveaux."
     
     def has_permission(self, request, view):
