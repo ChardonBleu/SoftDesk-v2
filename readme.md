@@ -1,5 +1,7 @@
 # SoftDesk
 
+![SoftDesk logo](https://user.oc-static.com/upload/2020/09/22/16007803099977_P8%20%281%29.png "SoftDesk logo")
+
 Projet 10 de la formation DA python d'Openclassrooms.
 
 API de gestion et de suivi de problèmes techniques. L'application doit permettre aux utilisateurs de créer des projets, d'ajouter des utilisateurs à des projets spécifiques, de créer des problèmes au sein des projets et d'attribuer des libéllés à ces problèmes  en focntion de leurs priorités, de balises, etc.
@@ -81,7 +83,7 @@ cd issuetracking
 
 Puis dans la console excécuter:
 ```bash 
-flake8 --format=html --htmldir=flake-report
+flake8 --format=html --htmldir=flake-report --exclude=migrations
 ```
 Un nouveau rapport flake8 est généré. Aller dans le répertoire flake-report créé dans le répertoire library et ouvrir le fichier index.html dans un navigateur web.
 Changer de répertoire pour tester d'autres fichiers *.py

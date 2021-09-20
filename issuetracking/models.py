@@ -43,10 +43,8 @@ class Project(models.Model):
         related_name='projects',
     )
 
-
     class Meta:
         ordering = ['id']
-
 
     def save(self, *args, **kwargs):
         """Override save of the current instance of Project when create a new
@@ -99,7 +97,6 @@ class Contributor(models.Model):
         verbose_name="related projects",
     )
 
-
     class Meta:
         ordering = ['id']
 
@@ -113,8 +110,10 @@ class Contributor(models.Model):
         Arguments:
             project {Project Object} -- Project object
         """
-        cls.objects.get_or_create(permission='AUTHOR', user=project.author_user, project=project)
-    
+        cls.objects.get_or_create(permission='AUTHOR',
+                                  user=project.author_user,
+                                  project=project)
+
     @classmethod
     def save_assignee_issue_as_contributor(cls, issue):
         """Create a contributor as a CONTRIB when the authenticated user
@@ -125,7 +124,10 @@ class Contributor(models.Model):
         Arguments:
             project {Project Object} -- Project object
         """
-        cls.objects.get_or_create(permission='CONTRIB', user=issue.assignee_user, project=issue.project)
+        cls.objects.get_or_create(permission='CONTRIB',
+                                  user=issue.assignee_user,
+                                  project=issue.project)
+
 
 class Issue(models.Model):
     """Issues table"""
@@ -199,10 +201,8 @@ class Issue(models.Model):
         help_text=_("issue creation date is automatically filled in."),
     )
 
-
     class Meta:
         ordering = ['created_datetime']
-
 
     def save(self, *args, **kwargs):
         """Override save of the current instance of Issue when create a new

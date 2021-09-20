@@ -4,16 +4,17 @@ from account.models import User
 
 
 class UserSerializer(serializers.ModelSerializer):
-    
+
     class Meta:
         model = User
-        fields = ['id', 'username', 'first_name', 'last_name', 'email', 'password']
+        fields = ['id', 'username', 'first_name',
+                  'last_name', 'email', 'password']
 
     def create(self, validated_data):
         """necessary to encrypt password when user is created with API signup.
 
         Arguments:
-            validated_data {[type]} -- 
+            validated_data {[type]} --
 
         Returns:
             User Object -- User object with encrypted password

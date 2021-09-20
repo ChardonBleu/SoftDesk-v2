@@ -6,17 +6,17 @@ from issuetracking.models import Contributor
 class IsAuthorProject(BasePermission):
     message = "Seul l'auteur d'un projet/commentaire \
 peut mettre à jour ou supprimer ce projet/commentaire."
-    
+
     def has_object_permission(self, request, view, obj):
-        if request.method in SAFE_METHODS :
-            return True        
+        if request.method in SAFE_METHODS:
+            return True
         return obj.author_user == request.user
 
 
 class IsContributorProject(BasePermission):
     message = "Seuls les contributeurs d'un projet peuvent accéder aux \
 problèmes et commentaires de ce projet et en créer de nouveaux."
-    
+
     def has_permission(self, request, view):
         """allow to view list project, issue or comment, and to add project,
         issue or comment
@@ -30,20 +30,19 @@ problèmes et commentaires de ce projet et en créer de nouveaux."
         """
         project = view.kwargs['project_id']
         is_author = Contributor.objects.filter(
-            project=project, 
-            user=request.user, 
+            project=project,
+            user=request.user,
             permission="AUTHOR").exists()
         is_contrib = Contributor.objects.filter(
-            project=project, 
-            user=request.user, 
+            project=project,
+            user=request.user,
             permission="CONTRIB").exists()
-                    
+
         if request.method in SAFE_METHODS or request.method == 'POST':
             return is_author or is_contrib
         if request.method == 'PUT' or request.method == 'DELETE':
             return is_author or is_contrib
 
-        
     def has_object_permission(self, request, view, obj):
         """allow to retrieve, update or delete project, issue or comment
 
@@ -55,12 +54,13 @@ problèmes et commentaires de ce projet et en créer de nouveaux."
         Returns:
             [bool] -- true if permission is ok
         """
-        if request.method in SAFE_METHODS :
+        if request.method in SAFE_METHODS:
             return True
         if request.method == 'DELETE' or request.method == 'PUT':
             return obj.author_user == request.user
 
-class canManageContributors(BasePermission):
+
+class CanManageContributors(BasePermission):
     message = "Seuls les contributeurs d'un projets peuvent ajouter de \
 nouveaux contributeurs."
 
@@ -76,28 +76,27 @@ nouveaux contributeurs."
         """
         project = view.kwargs['project_id']
         is_author = Contributor.objects.filter(
-            project=project, 
-            user=request.user, 
+            project=project,
+            user=request.user,
             permission="AUTHOR").exists()
         is_contrib = Contributor.objects.filter(
-            project=project, 
-            user=request.user, 
+            project=project,
+            user=request.user,
             permission="CONTRIB").exists()
-                    
+
         if request.method in SAFE_METHODS or request.method == 'POST':
             return is_author or is_contrib
         if request.method == 'PUT' or request.method == 'DELETE':
             return is_author or is_contrib
 
-        
     def has_object_permission(self, request, view, obj):
-        
+
         project = view.kwargs['project_id']
         can_manage_contributors = Contributor.objects.filter(
-            project=project, 
+            project=project,
             user=request.user).exists()
-        
-        if request.method in SAFE_METHODS :
+
+        if request.method in SAFE_METHODS:
             return True
         if request.method == 'DELETE' or request.method == 'PUT':
             return can_manage_contributors

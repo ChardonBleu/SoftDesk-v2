@@ -20,7 +20,6 @@ def test_registration(db, api_client: APIClient):
                                 'first_name': 'elo',
                                 'last_name': 'dalb',
                                 'email': 'elo@soleneidos.fr',
-                                'password': 'choucroute'}) 
+                                'password': 'choucroute'})
     assert response.status_code == 201
     assert User.objects.count() == user_count + 1
-
