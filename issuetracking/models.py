@@ -32,7 +32,7 @@ class Project(models.Model):
         ),
         choices=TYPE,
     )
-    author_user_id = models.ForeignKey(
+    author_user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
         help_text=_(
@@ -78,7 +78,7 @@ class Contributor(models.Model):
         max_length=255,
         help_text=_(" "),
     )
-    user_id = models.ForeignKey(
+    user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
         help_text=_(
@@ -89,7 +89,7 @@ class Contributor(models.Model):
         verbose_name="related user (project contributor or author)",
         related_name='contributors'
     )
-    project_id = models.ForeignKey(
+    project = models.ForeignKey(
         "Project",
         on_delete=models.CASCADE,
         help_text=_(
@@ -113,7 +113,7 @@ class Contributor(models.Model):
         Arguments:
             project {Project Object} -- Project object
         """
-        cls.objects.get_or_create(permission='AUTHOR', user_id=project.author_user_id, project_id=project)
+        cls.objects.get_or_create(permission='AUTHOR', user=project.author_user, project=project)
     
     @classmethod
     def save_assignee_issue_as_contributor(cls, issue):
@@ -125,7 +125,7 @@ class Contributor(models.Model):
         Arguments:
             project {Project Object} -- Project object
         """
-        cls.objects.get_or_create(permission='CONTRIB', user_id=issue.assignee_user_id, project_id=issue.project_id)
+        cls.objects.get_or_create(permission='CONTRIB', user=issue.assignee_user, project=issue.project)
 
 class Issue(models.Model):
     """Issues table"""
@@ -156,7 +156,7 @@ class Issue(models.Model):
         max_length=6,
         choices=PRIORITY,
     )
-    project_id = models.ForeignKey(
+    project = models.ForeignKey(
         "Project",
         help_text=_(
             "Each issue has a project. A project can have several \
@@ -172,7 +172,7 @@ class Issue(models.Model):
         max_length=4,
         choices=STATUS,
     )
-    author_user_id = models.ForeignKey(
+    author_user = models.ForeignKey(
         User,
         help_text=_(
             "Each issue has an author. A custom user can have several \
@@ -182,7 +182,7 @@ class Issue(models.Model):
         verbose_name="author issue",
         related_name="issues",
     )
-    assignee_user_id = models.ForeignKey(
+    assignee_user = models.ForeignKey(
         User,
         help_text=_(
             "Each issue has an assignee. By default asssignee is the \
@@ -190,7 +190,7 @@ class Issue(models.Model):
         ),
         on_delete=models.CASCADE,
         verbose_name="assignee issue",
-        default=author_user_id,
+        default=author_user,
         related_name="issues_assign",
     )
     created_datetime = models.DateTimeField(
@@ -210,7 +210,7 @@ class Issue(models.Model):
         save_assignee_issue_as_contributor()
         """
         super(Issue, self).save(*args, **kwargs)
-        if self.assignee_user_id != self.author_user_id:
+        if self.assignee_user != self.author_user:
             Contributor.save_assignee_issue_as_contributor(self)
 
 
@@ -222,7 +222,7 @@ class Comment(models.Model):
         max_length=2048,
         help_text=_("Each comment has a description."),
     )
-    author_user_id = models.ForeignKey(
+    author_user = models.ForeignKey(
         User,
         help_text=_(
             "Each comment has an author. A custom user can have several \
@@ -232,7 +232,7 @@ class Comment(models.Model):
         verbose_name="author comment",
         related_name='comments',
     )
-    issue_id = models.ForeignKey(
+    issue = models.ForeignKey(
         "Issue",
         help_text=_(
             "Each comment has an issue. An issue can have several \
