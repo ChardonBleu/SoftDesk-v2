@@ -8,6 +8,7 @@ from issuetracking.permissions import IsAuthorProject, IsContributorProject
 from issuetracking.permissions import CanManageContributors
 
 
+    
 class ProjectViewSet(viewsets.ModelViewSet):
     """
     The endpoint [project list](/projects/) is the main entry point of the
@@ -33,7 +34,6 @@ class ProjectViewSet(viewsets.ModelViewSet):
     [refresh](/token/refresh/) it.
 
     """
-
     queryset = Project.objects.all()
     serializer_class = ProjectSerializer
     permission_classes = [IsAuthenticated, IsAuthorProject]
@@ -71,7 +71,7 @@ class ContributorsViewSet(viewsets.ModelViewSet):
         return Contributor.objects.filter(project=project)
 
     def perform_create(self, serializer):
-        """When somenone add a contributors he does it for a done project,
+        """When somenone add a contributor he does it for a done project,
         and the project-id is passed in url.
 
         Arguments:

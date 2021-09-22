@@ -4,8 +4,8 @@ from issuetracking.models import Contributor
 
 
 class IsAuthorProject(BasePermission):
-    message = "Seul l'auteur d'un projet/commentaire \
-peut mettre à jour ou supprimer ce projet/commentaire."
+    message = "Seul l'auteur d'un projet peut mettre à jour ou supprimer \
+ce projet"
 
     def has_object_permission(self, request, view, obj):
         if request.method in SAFE_METHODS:
@@ -86,7 +86,7 @@ nouveaux contributeurs."
 
         if request.method in SAFE_METHODS or request.method == 'POST':
             return is_author or is_contrib
-        if request.method == 'PUT' or request.method == 'DELETE':
+        if request.method == 'DELETE':
             return is_author or is_contrib
 
     def has_object_permission(self, request, view, obj):
@@ -98,5 +98,5 @@ nouveaux contributeurs."
 
         if request.method in SAFE_METHODS:
             return True
-        if request.method == 'DELETE' or request.method == 'PUT':
+        if request.method == 'DELETE':
             return can_manage_contributors
