@@ -126,7 +126,26 @@ La documentation officielle de Django:
 
 La documentation officielle de DjangoRestFramework:
 
-    https://getbootstrap.com/docs/4.3/getting-started/introduction/
+    https://www.django-rest-framework.org/
+
+Le blog "Simple is better than complex" de Vitor Freitas:
+
+    https://simpleisbetterthancomplex.com/tutorial/2019/04/07/how-to-save-extra-data-to-a-django-rest-framework-serializer.html
+    https://simpleisbetterthancomplex.com/tutorial/2019/04/07/how-to-save-extra-data-to-a-django-rest-framework-serializer.html
+
+Le blog "Python doctor":
+
+    https://python.doctor/page-django-rest-framework-drf-cours-tuto-tutoriel-exemples
+
+La documentation Postman:
+
+    https://learning.postman.com/docs/publishing-your-api/documenting-your-api/
+
+Le markdown guide:
+
+    https://www.markdownguide.org/basic-syntax/
+
+
 
 Remerciements
 ---
