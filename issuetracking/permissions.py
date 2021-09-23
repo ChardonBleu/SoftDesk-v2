@@ -15,7 +15,8 @@ ce projet"
 
 class IsContributorProject(BasePermission):
     message = "Seuls les contributeurs d'un projet peuvent accéder aux \
-problèmes et commentaires de ce projet et en créer de nouveaux."
+problèmes et commentaires de ce projet et en créer de nouveaux. Seuls les \
+auteurs peuvent supprimer les problèmes ou commentaires"
 
     def has_permission(self, request, view):
         """allow to view list project, issue or comment, and to add project,
