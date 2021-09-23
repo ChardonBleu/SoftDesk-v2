@@ -34,7 +34,6 @@ class ProjectViewSet(viewsets.ModelViewSet):
     [refresh](/token/refresh/) it.
 
     """
-    queryset = Project.objects.all()
     serializer_class = ProjectSerializer
     permission_classes = [IsAuthenticated, IsAuthorProject]
 
