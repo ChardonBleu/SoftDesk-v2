@@ -29,7 +29,7 @@ class ProjectViewSet(viewsets.ModelViewSet):
     Only projects/issues/comments authors can update or delete projects/issues
     /comments.
 
-    On PostMan you'll have to use a [token](/token/) for authentication.
+    You'll have to use a [token](/token/) for authentication.
     After the first use of token access you'll have to
     [refresh](/token/refresh/) it.
 
