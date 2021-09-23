@@ -5,7 +5,7 @@ from issuetracking.models import Contributor
 
 class IsAuthorProject(BasePermission):
     message = "Seul l'auteur d'un projet peut mettre à jour ou supprimer \
-ce projet"
+ce projet."
 
     def has_object_permission(self, request, view, obj):
         if request.method in SAFE_METHODS:
@@ -15,11 +15,12 @@ ce projet"
 
 class IsContributorProject(BasePermission):
     message = "Seuls les contributeurs d'un projet peuvent accéder aux \
-problèmes et commentaires de ce projet et en créer de nouveaux."
+problèmes et commentaires de ce projet et en créer de nouveaux. Seuls les \
+auteurs peuvent supprimer les problèmes ou commentaires."
 
     def has_permission(self, request, view):
         """allow to view list project, issue or comment, and to add project,
-        issue or comment
+        issue or comment.
 
         Arguments:
             request {[type]} -- contain post data
@@ -44,7 +45,7 @@ problèmes et commentaires de ce projet et en créer de nouveaux."
             return is_author or is_contrib
 
     def has_object_permission(self, request, view, obj):
-        """allow to retrieve, update or delete project, issue or comment
+        """allow to retrieve, update or delete project, issue or comment.
 
         Arguments:
             request {[type]} -- contain post data
@@ -61,11 +62,11 @@ problèmes et commentaires de ce projet et en créer de nouveaux."
 
 
 class CanManageContributors(BasePermission):
-    message = "Seuls les contributeurs d'un projets peuvent ajouter de \
+    message = "Seuls les contributeurs d'un projet peuvent ajouter de \
 nouveaux contributeurs."
 
     def has_permission(self, request, view):
-        """allow to view list contributirs and post new contributor.
+        """allow to view list contributors and post new contributor.
 
         Arguments:
             request {[type]} -- contain post data
@@ -90,7 +91,8 @@ nouveaux contributeurs."
             return is_author or is_contrib
 
     def has_object_permission(self, request, view, obj):
-
+        """allow to delete contributor
+        """
         project = view.kwargs['project_id']
         can_manage_contributors = Contributor.objects.filter(
             project=project,
