@@ -6,7 +6,7 @@ from issuetracking.views import ContributorsViewSet, CommentViewSet
 
 
 router = DefaultRouter()
-router.register('projects', ProjectViewSet)
+router.register('projects', ProjectViewSet, basename='project')
 
 contributor_list = ContributorsViewSet.as_view({
     'get': 'list',
